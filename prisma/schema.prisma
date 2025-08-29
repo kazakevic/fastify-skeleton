@@ -22,3 +22,24 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Team {
+    id       Int      @id @default(autoincrement())
+    uuid     String   @unique
+    name     String
+    ownerId  String
+}
+
+model TeamMember {
+    id       Int      @id @default(autoincrement())
+    teamId   String
+    name     String
+}
+
+model TeamMemberAttribute {
+    id            Int      @id @default(autoincrement())
+    teamMemberId  String
+    key           String
+    value         String
+    @@unique([teamMemberId, key]) // 👈 composite unique constraint
+}

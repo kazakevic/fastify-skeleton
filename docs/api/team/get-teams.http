@@ -1,0 +1,2 @@
+GET {{base-url}}/api/v1/teams
+Authorization: Bearer {{$auth.token("tokenAuth")}}

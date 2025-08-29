@@ -6,6 +6,7 @@ import loginRoute from "./routes/public/auth.js";
 import registerRoute from "./routes/public/register.js";
 import auth from "./plugins/auth.js";
 import formBody from "@fastify/formbody";
+import teamRoute from "./routes/team.js";
 
 
 export default function buildApp() {
@@ -21,6 +22,7 @@ export default function buildApp() {
     app.register(loginRoute);
     app.register(registerRoute);
 
+    app.register(teamRoute);
 
     return app;
 }
