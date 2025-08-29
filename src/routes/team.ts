@@ -33,7 +33,14 @@ export default async function teamRoute(app: FastifyInstance) {
         })
     })
 
-    app.get("/api/v1/teams", {preHandler: [app.authenticate]}, async (request, reply) => {
+    const listTeamsOpts = {
+        schema: {
+            tags: ["Teams"],
+        },
+        preHandler: [app.authenticate]
+    }
+
+    app.get("/api/v1/teams", listTeamsOpts, async (request, reply) => {
         const ownerId = (request.user as { id: string }).id
 
         const teams = await app.prisma.team.findMany({
@@ -47,6 +54,7 @@ export default async function teamRoute(app: FastifyInstance) {
 
     const addTeamMemberOpts = {
         schema: {
+            tags: ["Teams", "TeamMembers"],
             body: {
                 type: "object",
                 properties: {
@@ -64,6 +72,7 @@ export default async function teamRoute(app: FastifyInstance) {
 
         const member = {
             name: (request.body as { name: string }).name,
+            uuid: v7(),
             teamId: teamId
         }
 
@@ -76,7 +85,14 @@ export default async function teamRoute(app: FastifyInstance) {
         })
     })
 
-    app.get("/api/v1/teams/:teamId/members", {preHandler: [app.authenticate]}, async (request, reply) => {
+    const listTeamMemberOpts = {
+        schema: {
+            tags: ["Teams", "TeamMembers"],
+        },
+        preHandler: [app.authenticate]
+    }
+
+    app.get("/api/v1/teams/:teamId/members", listTeamMemberOpts, async (request, reply) => {
         const teamId = (request.params as { teamId: string }).teamId
 
         const members = await app.prisma.teamMember.findMany({
@@ -88,8 +104,30 @@ export default async function teamRoute(app: FastifyInstance) {
         })
     })
 
+    const deleteTeamMemberOpts = {
+        schema: {
+            tags: ["TeamMembers"],
+        },
+        preHandler: [app.authenticate]
+    }
+
+    app.delete("/api/v1/teams/members/:memberId", deleteTeamMemberOpts, async (request, reply) => {
+        const memberId = (request.params as { memberId: string }).memberId
+
+        await app.prisma.teamMemberAttribute.deleteMany({
+            where: { teamMemberId: memberId }
+        })
+
+        await app.prisma.teamMember.delete({
+            where: { uuid: memberId }
+        })
+
+        reply.code(204).send()
+    })
+
     const addAttributeOpts = {
         schema: {
+            tags: ["TeamMembers"],
             body: {
                 type: "object",
                 properties: {
@@ -130,7 +168,14 @@ export default async function teamRoute(app: FastifyInstance) {
         })
     })
 
-    app.get("/api/v1/teams/member/:memberId/attributes", {preHandler: [app.authenticate]}, async (request, reply) => {
+    const listAttributesOpts = {
+        schema: {
+            tags: ["TeamMembers"],
+        },
+        preHandler: [app.authenticate]
+    }
+
+    app.get("/api/v1/teams/member/:memberId/attributes", listAttributesOpts, async (request, reply) => {
         const teamMemberId = (request.params as { memberId: string }).memberId
 
         const attributes = await app.prisma.teamMemberAttribute.findMany({

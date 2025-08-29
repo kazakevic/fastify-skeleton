@@ -1,0 +1,2 @@
+DELETE {{base-url}}/api/v1/teams/members/{{teamMemberUuid}}
+Authorization: Bearer {{$auth.token("tokenAuth")}}
