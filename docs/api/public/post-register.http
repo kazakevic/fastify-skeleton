@@ -1,0 +1,8 @@
+POST {{base-url}}/api/public/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "email": "test@test.com",
+  "password": "admin"
+}

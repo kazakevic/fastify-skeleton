@@ -1,0 +1,7 @@
+POST {{base-url}}/api/public/auth
+Content-Type: application/json
+
+{
+  "username": "test@test.com",
+  "password": "admin"
+}

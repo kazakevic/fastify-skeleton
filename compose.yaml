@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: ./.docker/js-app
+    container_name: quokka_app
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
+    networks:
+      - fastify_network
+
+  db:
+    image: postgres:latest
+    container_name: quokka_db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=quokka_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - fastify_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  fastify_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,39 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# TypeScript compiled output
+dist/
+
+# Local development and testing files
+.env
+.env.*
+*.log
+coverage/
+test/
+tests/
+__tests__
+
+# Docker-specific files
+Dockerfile
+compose.yaml
+docker-compose.yaml
+.dockerignore
+
+# Editor and OS files
+.vscode/
+.idea/
+*.DS_Store
+*.swp
+*.swo
+
+# Prisma generated files (optional, include if you want to regenerate in container)
+# prisma/migrations/
+# prisma/dev.db
+
+# Miscellaneous
+tmp/
+temp/
