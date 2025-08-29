@@ -4,7 +4,7 @@ export default async function healthRoute(app: FastifyInstance) {
     app.get("/health", {
         schema: {
             description: "Health check endpoint",
-            tags: ["App"],
+            tags: ["Public"],
             response: {
                 200: {
                     type: "object",

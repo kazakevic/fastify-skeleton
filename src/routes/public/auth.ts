@@ -4,6 +4,7 @@ import {comparePassword} from "../../utils/passHashAdapter.js";
 export default async function loginRoute(app: FastifyInstance) {
     const opts = {
         schema: {
+            tags: ["Public", "Auth"],
             body: {
                 type: "object",
                 required: ["username", "password"],

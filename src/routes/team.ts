@@ -4,6 +4,7 @@ import {v7} from "uuid";
 export default async function teamRoute(app: FastifyInstance) {
     const createTeamOpts = {
         schema: {
+            tags: ["Teams"],
             body: {
                 type: "object",
                 properties: {

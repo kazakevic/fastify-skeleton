@@ -3,9 +3,9 @@ import {v7} from "uuid";
 import {hashPassword} from "../../utils/passHashAdapter.js";
 
 export default async function registerRoute(app: FastifyInstance) {
-
     const opts = {
         schema: {
+            tags: ["Public", "Auth"],
             body: {
                 type: "object",
                 properties: {
