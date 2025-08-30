@@ -4,10 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./dist/index.js",
     "build": "npx tsc && npx prisma migrate dev --name init",
     "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
     "dev": "npx tsc --watch"
   },
   "keywords": [],

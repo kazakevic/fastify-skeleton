@@ -1,4 +1,4 @@
-import Fastify, {type FastifyReply, type FastifyRequest} from "fastify";
+import Fastify from "fastify";
 import healthRoute from "./routes/health.js";
 import userRoute from "./routes/users.js";
 import prismaPlugin from "./plugins/prisma.js";
@@ -9,7 +9,6 @@ import formBody from "@fastify/formbody";
 import teamRoute from "./routes/team.js";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-
 
 export default function buildApp() {
     const app = Fastify({ logger: true });
