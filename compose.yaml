@@ -1,7 +1,8 @@
 services:
   app:
     build:
-      context: ./.docker/js-app
+      context: .
+      dockerfile: .docker/js-app/dev/Dockerfile
     container_name: quokka_app
     working_dir: /app
     volumes:
@@ -14,7 +15,8 @@ services:
       - db
     networks:
       - fastify_network
-
+    command:
+        sh -c "npm install --include=dev && npm run build && npm run start"
   db:
     image: postgres:latest
     container_name: quokka_db

@@ -1,12 +1,9 @@
 start:
-	cp package.json ./.docker/js-app/package.json
-	#docker-compose up --build
 	docker compose up --build -d
-	rm .docker/js-app/package.json
 shell:
 	docker exec -it quokka_app /bin/sh
 watch:
-	docker exec -it quokka_app npm run watch
+	docker exec -it quokka_app npm run dev
 
 ### Prisma db
 prisma-generate:

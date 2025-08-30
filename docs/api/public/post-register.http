@@ -2,7 +2,7 @@ POST {{base-url}}/api/public/register
 Content-Type: application/json
 
 {
-  "username": "admin1",
-  "email": "test1@test.com",
+  "username": "admin",
+  "email": "test@test.com",
   "password": "admin"
 }
