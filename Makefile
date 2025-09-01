@@ -1,5 +1,7 @@
 start:
 	docker compose up --build -d
+start-prod:
+	docker compose -f compose.prod.yaml up --build -d
 shell:
 	docker exec -it quokka_app /bin/sh
 watch:

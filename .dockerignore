@@ -9,8 +9,6 @@ yarn.lock
 dist/
 
 # Local development and testing files
-.env
-.env.*
 *.log
 coverage/
 test/
