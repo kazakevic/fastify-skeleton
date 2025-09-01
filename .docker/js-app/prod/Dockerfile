@@ -35,4 +35,3 @@ COPY --from=build /app/prisma ./prisma
 EXPOSE 3000
 
 CMD ["node", "dist/index.js"]
-
