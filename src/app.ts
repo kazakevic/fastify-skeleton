@@ -9,6 +9,7 @@ import formBody from "@fastify/formbody";
 import teamRoute from "./routes/team.js";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
+import cors from "@fastify/cors";
 
 export default function buildApp() {
     const app = Fastify({ logger: true });
@@ -16,6 +17,13 @@ export default function buildApp() {
     app.register(prismaPlugin);
     app.register(auth);
     app.register(formBody);
+
+    // 👇 configure CORS
+    app.register(cors, {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+    });
+
 
     // Register Swagger/OpenAPI
     app.register(swagger, {
