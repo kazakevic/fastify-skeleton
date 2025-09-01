@@ -7,6 +7,8 @@ COPY package* ./
 RUN npm i --include=dev
 
 COPY prisma ./prisma
+COPY .env.prod ./.env
+RUN cat .env
 RUN npx prisma generate
 
 # Copy source code
