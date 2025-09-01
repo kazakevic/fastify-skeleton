@@ -85,6 +85,53 @@ export default async function teamRoute(app: FastifyInstance) {
         })
     })
 
+    const deleteTeamOpts = {
+        schema: {
+            tags: ["Teams"],
+        },
+        preHandler: [app.authenticate]
+    }
+
+    app.delete("/api/v1/teams/:teamId", deleteTeamOpts, async (request, reply) => {
+        const teamId = (request.params as { teamId: string }).teamId
+
+        const ownerId = (request.user as { id: string }).id
+
+        const team = await app.prisma.team.findUnique({
+            where: { uuid: teamId }
+        })
+
+        if (!team) {
+            return reply.code(404).send({ message: "Team not found" })
+        }
+
+        if (team.ownerId !== ownerId) {
+            return reply.code(403).send({ message: "You are not the owner of this team" })
+        }
+
+        // Delete all team members and their attributes
+        const members = await app.prisma.teamMember.findMany({
+            where: { teamId }
+        })
+
+        for (const member of members) {
+            await app.prisma.teamMemberAttribute.deleteMany({
+                where: { teamMemberId: member.uuid }
+            })
+        }
+
+        await app.prisma.teamMember.deleteMany({
+            where: { teamId }
+        })
+
+        // Delete the team
+        await app.prisma.team.delete({
+            where: { uuid: teamId }
+        })
+
+        reply.code(204).send()
+    })
+
     const listTeamMemberOpts = {
         schema: {
             tags: ["Teams", "TeamMembers"],
