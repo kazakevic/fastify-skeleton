@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "binary"
 }
 
@@ -17,30 +17,33 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   uuid      String   @unique
-  username     String
+  username  String
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
 }
 
 model Team {
-    id       Int      @id @default(autoincrement())
-    uuid     String   @unique
-    name     String
-    ownerId  String
+  id      Int    @id @default(autoincrement())
+  uuid    String @unique
+  name    String
+  ownerId String
 }
 
 model TeamMember {
-    id       Int      @id @default(autoincrement())
-    uuid     String   @unique
-    teamId   String
-    name     String
+  id         Int                   @id @default(autoincrement())
+  uuid       String                @unique
+  teamId     String
+  name       String
+  attributes TeamMemberAttribute[] // 👈 one-to-many
 }
 
 model TeamMemberAttribute {
-    id            Int      @id @default(autoincrement())
-    teamMemberId  String
-    key           String
-    value         String
-    @@unique([teamMemberId, key]) // 👈 composite unique constraint
+  id           Int        @id @default(autoincrement())
+  teamMemberId Int // 👈 FK must match TeamMember.id type
+  key          String
+  value        String
+  teamMember   TeamMember @relation(fields: [teamMemberId], references: [id])
+
+  @@unique([teamMemberId, key]) // 👈 composite unique constraint
 }

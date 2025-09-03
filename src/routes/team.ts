@@ -114,11 +114,11 @@ export default async function teamRoute(app: FastifyInstance) {
             where: { teamId }
         })
 
-        for (const member of members) {
-            await app.prisma.teamMemberAttribute.deleteMany({
-                where: { teamMemberId: member.uuid }
-            })
-        }
+        // for (const member of members) {
+        //     await app.prisma.teamMemberAttribute.deleteMany({
+        //         where: { teamMemberId: member.uuid }
+        //     })
+        // }
 
         await app.prisma.teamMember.deleteMany({
             where: { teamId }
@@ -143,7 +143,10 @@ export default async function teamRoute(app: FastifyInstance) {
         const teamId = (request.params as { teamId: string }).teamId
 
         const members = await app.prisma.teamMember.findMany({
-            where: { teamId }
+            where: { teamId },
+            include: {
+                attributes: true
+            }
         })
 
         reply.code(200).send({
@@ -161,8 +164,18 @@ export default async function teamRoute(app: FastifyInstance) {
     app.delete("/api/v1/teams/members/:memberId", deleteTeamMemberOpts, async (request, reply) => {
         const memberId = (request.params as { memberId: string }).memberId
 
+        const member = await app.prisma.teamMember.findUnique({
+            where: { uuid: memberId }
+        })
+
+        if (!member) {
+            return reply.code(404).send({ message: "Team member not found" })
+        }
+
+        // Delete all attributes associated with the member
+
         await app.prisma.teamMemberAttribute.deleteMany({
-            where: { teamMemberId: memberId }
+            where: { teamMemberId: member.id }
         })
 
         await app.prisma.teamMember.delete({
@@ -191,16 +204,24 @@ export default async function teamRoute(app: FastifyInstance) {
     app.put("/api/v1/teams/member/:memberId/attributes", addAttributeOpts, async (request, reply) => {
         const teamMemberId = (request.params as { memberId: string }).memberId
 
+        const member = await app.prisma.teamMember.findUnique({
+            where: { uuid: teamMemberId }
+        })
+
+        if (!member) {
+            return reply.code(404).send({ message: "Team member not found" })
+        }
+
         const attribute = {
             key: (request.body as { key: string }).key,
             value: (request.body as { value: string }).value,
-            teamMemberId: teamMemberId
+            teamMemberId: member.id
         }
 
         await app.prisma.teamMemberAttribute.upsert({
             where: {
                 teamMemberId_key: {
-                    teamMemberId: teamMemberId,
+                    teamMemberId: member.id,
                     key: attribute.key
                 }
             },
@@ -225,8 +246,18 @@ export default async function teamRoute(app: FastifyInstance) {
     app.get("/api/v1/teams/member/:memberId/attributes", listAttributesOpts, async (request, reply) => {
         const teamMemberId = (request.params as { memberId: string }).memberId
 
+        const member = await app.prisma.teamMember.findUnique({
+            where: { uuid: teamMemberId }
+        })
+
+        if (!member) {
+            return reply.code(404).send({ message: "Team member not found" })
+        }
+
         const attributes = await app.prisma.teamMemberAttribute.findMany({
-            where: { teamMemberId }
+            where: {
+                teamMemberId: member.id
+            }
         })
 
         reply.code(200).send({
