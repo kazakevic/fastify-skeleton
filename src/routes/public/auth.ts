@@ -55,7 +55,7 @@ export default async function loginRoute(app: FastifyInstance) {
         // Sign a JWT
         const token = app.jwt.sign(
             { id: user.uuid, username: user.username },
-            { expiresIn: "15m" }
+            { expiresIn: "60m" }
         );
 
         return {
